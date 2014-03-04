@@ -15,9 +15,7 @@ import MyDomain._
 object ScalaReactLineDrawing extends SimpleSwingApplication with Observing {
 
   override def main(args: Array[String]) {
-    schedule {
-      startup(args)
-    }
+    schedule { startup(args) }
     start() // starts the scala-react engine
   }
 
@@ -43,7 +41,6 @@ object ScalaReactLineDrawing extends SimpleSwingApplication with Observing {
 
       peer.addMouseListener(new MouseAdapter {
         override def mousePressed(e: MouseEvent): Unit = mouseDown << e.getPoint
-
         override def mouseReleased(e: MouseEvent): Unit = mouseUp << e.getPoint
       })
       peer.addMouseMotionListener(new MouseMotionAdapter {
@@ -63,7 +60,6 @@ object ScalaReactLineDrawing extends SimpleSwingApplication with Observing {
       }
 
       var pathDrawn = new Path(new Point(0, 0))
-
       def draw(path: Path) {
         pathDrawn = path
         repaint()
