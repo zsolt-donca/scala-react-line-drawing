@@ -1,9 +1,9 @@
 package zsd
 
 import scala.swing._
-import java.awt.event.{MouseMotionAdapter, MouseEvent, MouseAdapter}
 import java.awt.{Color, Point}
 import scala.react.Domain
+import scala.swing.event.{MouseDragged, MouseReleased, MousePressed}
 
 object MyDomain extends Domain {
   val scheduler = new SwingScheduler()
@@ -39,13 +39,12 @@ object ScalaReactLineDrawing extends SimpleSwingApplication with Observing {
           draw(path)
       }
 
-      peer.addMouseListener(new MouseAdapter {
-        override def mousePressed(e: MouseEvent): Unit = mouseDown << e.getPoint
-        override def mouseReleased(e: MouseEvent): Unit = mouseUp << e.getPoint
-      })
-      peer.addMouseMotionListener(new MouseMotionAdapter {
-        override def mouseDragged(e: MouseEvent): Unit = mouseMove << e.getPoint
-      })
+      listenTo(mouse.clicks, mouse.moves)
+      reactions += {
+        case MousePressed(_, point, _, _, _) => mouseDown << point
+        case MouseReleased(_, point, _, _, _) => mouseUp << point
+        case MouseDragged(_, point, _) => mouseMove << point
+      }
 
       class Path(var positions: Seq[Point]) {
         def this(pos: Point) = this(Seq(pos))
